@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: likha
+  labels:
+    app: likha
+spec:
+  replicas: 1
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      app: likha
+  template:
+    metadata:
+      labels:
+        app: likha
+    spec:
+      containers:
+        - name: likha
+          image: "bocajim/likha:latest"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: likha
+  labels:
+    app: likha
+spec:
+  type: ClusterIP
+  selector:
+    app: likha
+  ports:
+    - name: http
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: likha-https-redirect
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: false
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: likha
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - match: Host(`likha.tartabit.com`)
+      kind: Rule
+      services:
+        - name: likha
+          port: 80
+      middlewares:
+        - name: likha-https-redirect
+  tls:
+    secretName: traefik-tls-cert
+    store:
+      name: traefik-tls-store

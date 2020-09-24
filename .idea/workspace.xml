@@ -23,6 +23,9 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\source\likha" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\source\likha" />
     </key>
@@ -36,7 +39,7 @@
       <option name="presentableId" value="Default" />
       <updated>1600780473682</updated>
       <workItem from="1600780474788" duration="6773000" />
-      <workItem from="1600909269651" duration="1884000" />
+      <workItem from="1600909269651" duration="5870000" />
     </task>
     <servers />
   </component>
@@ -56,5 +59,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="698" y="323" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040/3840.0.1920.1040@0.0.1920.1040" timestamp="1600781039450" />
+    <state x="693" y="167" width="579" height="534" key="find.popup" timestamp="1600919802562">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="693" y="167" width="579" height="534" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1600919802562" />
   </component>
 </project>

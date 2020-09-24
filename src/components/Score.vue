@@ -10,23 +10,24 @@
         disable-sort
         disable-pagination>
       <template v-slot:item.valid="{item}">
-        <v-icon v-if="item.valid==='new'" @click="add(item)">mdi-plus-circle</v-icon>
+        <v-icon v-if="item.valid==='new' && sum(item)===36" :color="validate(item).color" @click="add(item)">{{validate(item).icon}}</v-icon>
+        <v-icon v-else-if="item.valid==='new'" :color="validate(item).color">{{validate(item).icon}}</v-icon>
         <v-icon v-else-if="item.valid==='total'">mdi-sigma</v-icon>
-        <v-icon v-else :color="validate(item).color">{{validate(item).icon}}</v-icon>
+        <v-icon v-else>mdi-check-circle</v-icon>
       </template>
       <template v-slot:item.player0="{item}">
         <div v-if="item.valid!=='new'">
           <v-chip v-if="item.valid==='total'" :color="highscore(item.player0)" class="white--text">{{ item.player0 }}</v-chip>
           <div v-else>{{ item.player0 }}</div>
         </div>
-        <v-edit-dialog v-else
-            :return-value.sync="item.player0"
-        > {{ item.player0 }}
+        <v-edit-dialog v-else :return-value.sync="item.player0" @open="item.player0 = ''"> {{ item.player0 }}
           <template v-slot:input>
             <v-text-field
                 v-model="item.player0"
                 label="Edit"
                 value=""
+                type="number"
+                :hint="remaining(item)"
                 single-line
             ></v-text-field>
           </template>
@@ -37,14 +38,14 @@
           <v-chip v-if="item.valid==='total'" :color="highscore(item.player1)" class="white--text">{{ item.player1 }}</v-chip>
           <div v-else>{{ item.player1 }}</div>
         </div>
-        <v-edit-dialog v-else
-            :return-value.sync="item.player1"
-        > {{ item.player1 }}
+        <v-edit-dialog v-else :return-value.sync="item.player1" @open="item.player1 = ''"> {{ item.player1 }}
           <template v-slot:input>
             <v-text-field
                 v-model="item.player1"
                 label="Edit"
                 single-line
+                :hint="remaining(item)"
+                type="number"
             ></v-text-field>
           </template>
         </v-edit-dialog>
@@ -55,13 +56,14 @@
           <div v-else>{{ item.player2 }}</div>
         </div>
         <v-edit-dialog v-else
-            :return-value.sync="item.player2"
-        > {{ item.player2 }}
+            :return-value.sync="item.player2" @open="item.player2 = ''"> {{ item.player2 }}
           <template v-slot:input>
             <v-text-field
                 v-model="item.player2"
                 label="Edit"
                 single-line
+                :hint="remaining(item)"
+                type="number"
             ></v-text-field>
           </template>
         </v-edit-dialog>
@@ -72,13 +74,14 @@
           <div v-else>{{ item.player3 }}</div>
         </div>
         <v-edit-dialog v-else
-            :return-value.sync="item.player3"
-        > {{ item.player3 }}
+            :return-value.sync="item.player3" @open="item.player3 = ''"> {{ item.player3 }}
           <template v-slot:input>
             <v-text-field
                 v-model="item.player3"
                 label="Edit"
+                :hint="remaining(item)"
                 single-line
+                type="number"
             ></v-text-field>
           </template>
         </v-edit-dialog>
@@ -184,10 +187,14 @@ export default class Score extends Vue {
   validate(item: Record): { color: string; icon: string } {
     const sum = (+item.player0) + (+item.player1) + (+item.player2) + (+item.player3);
     if(sum === 36 ) {
-      return {color: 'green', icon:'mdi-check-circle'}
+      return {color: 'green', icon:'mdi-plus-circle'}
     } else {
       return {color: 'red', icon:'mdi-contrast-circle'}
     }
+  }
+
+  sum(item: Record): number {
+    return (+item.player0) + (+item.player1) + (+item.player2) + (+item.player3);
   }
 
   add(item: Record) {
@@ -205,11 +212,16 @@ export default class Score extends Vue {
   }
 
   highscore(num: number): string {
-    if(num>90) return 'red darken';
-    if(num>80) return 'orange darken';
-    if(num>70) return 'yellow darken';
-    if(num>40) return 'blue darken';
-    else return 'green darken';
+    if(num>90) return 'red darken-4';
+    if(num>80) return 'orange darken-4';
+    if(num>70) return 'yellow darken-4';
+    if(num>40) return 'blue darken-4';
+    else return 'green darken-4';
+  }
+
+  remaining(item: Record): string {
+    const rem = 36 - (+item.player0) - (+item.player1) - (+item.player2) - (+item.player3);
+    return rem.toString() + ' remaining'
   }
 }
 </script>
