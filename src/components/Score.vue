@@ -8,6 +8,7 @@
         :items="scores"
         hide-default-footer
         disable-sort
+        mobile-breakpoint="200"
         disable-pagination>
       <template v-slot:item.valid="{item}">
         <v-icon v-if="item.valid==='new' && sum(item)===36" :color="validate(item).color" @click="add(item)">{{validate(item).icon}}</v-icon>
@@ -16,78 +17,30 @@
         <v-icon v-else>mdi-check-circle</v-icon>
       </template>
       <template v-slot:item.player0="{item}">
-        <div v-if="item.valid!=='new'">
-          <v-chip v-if="item.valid==='total'" :color="highscore(item.player0)" class="white--text">{{ item.player0 }}</v-chip>
-          <div v-else>{{ item.player0 }}</div>
-        </div>
-        <v-edit-dialog v-else :return-value.sync="item.player0" @open="item.player0 = ''"> {{ item.player0 }}
-          <template v-slot:input>
-            <v-text-field
-                v-model="item.player0"
-                label="Edit"
-                value=""
-                type="number"
-                :hint="remaining(item)"
-                single-line
-            ></v-text-field>
-          </template>
-        </v-edit-dialog>
+        <Entry :scores="scores" :item="item" player="player0" ></Entry>
       </template>
       <template v-slot:item.player1="{item}">
-        <div v-if="item.valid!=='new'">
-          <v-chip v-if="item.valid==='total'" :color="highscore(item.player1)" class="white--text">{{ item.player1 }}</v-chip>
-          <div v-else>{{ item.player1 }}</div>
-        </div>
-        <v-edit-dialog v-else :return-value.sync="item.player1" @open="item.player1 = ''"> {{ item.player1 }}
-          <template v-slot:input>
-            <v-text-field
-                v-model="item.player1"
-                label="Edit"
-                single-line
-                :hint="remaining(item)"
-                type="number"
-            ></v-text-field>
-          </template>
-        </v-edit-dialog>
+        <Entry :scores="scores" :item="item" player="player1" ></Entry>
       </template>
       <template v-slot:item.player2="{item}">
-        <div v-if="item.valid!=='new'">
-          <v-chip v-if="item.valid==='total'" :color="highscore(item.player2)" class="white--text">{{ item.player2 }}</v-chip>
-          <div v-else>{{ item.player2 }}</div>
-        </div>
-        <v-edit-dialog v-else
-            :return-value.sync="item.player2" @open="item.player2 = ''"> {{ item.player2 }}
-          <template v-slot:input>
-            <v-text-field
-                v-model="item.player2"
-                label="Edit"
-                single-line
-                :hint="remaining(item)"
-                type="number"
-            ></v-text-field>
-          </template>
-        </v-edit-dialog>
+        <Entry :scores="scores" :item="item" player="player2" ></Entry>
       </template>
       <template v-slot:item.player3="{item}">
-        <div v-if="item.valid!=='new'">
-          <v-chip v-if="item.valid==='total'" :color="highscore(item.player3)" class="white--text">{{ item.player3 }}</v-chip>
-          <div v-else>{{ item.player3 }}</div>
-        </div>
-        <v-edit-dialog v-else
-            :return-value.sync="item.player3" @open="item.player3 = ''"> {{ item.player3 }}
-          <template v-slot:input>
-            <v-text-field
-                v-model="item.player3"
-                label="Edit"
-                :hint="remaining(item)"
-                single-line
-                type="number"
-            ></v-text-field>
-          </template>
-        </v-edit-dialog>
+        <Entry :scores="scores" :item="item" player="player3" ></Entry>
       </template>
     </v-data-table>
+    <v-bottom-navigation
+        app
+        fixed
+        grow
+        hide-on-scroll
+        color="primary">
+      Version 2.0
+    </v-bottom-navigation>
     <div class="text-right">
+      <v-btn color="red darken-2" text dark @click="reset">
+        Reset
+      </v-btn>
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
           <v-btn color="blue lighten-2" text dark v-bind="attrs" v-on="on">
@@ -101,10 +54,10 @@
           </v-card-title>
 
           <v-card-text>
-            <v-text-field v-model="headers[1].text"></v-text-field>
-            <v-text-field v-model="headers[2].text"></v-text-field>
-            <v-text-field v-model="headers[3].text"></v-text-field>
-            <v-text-field v-model="headers[4].text"></v-text-field>
+            <v-text-field v-model="players[0]"></v-text-field>
+            <v-text-field v-model="players[1]"></v-text-field>
+            <v-text-field v-model="players[2]"></v-text-field>
+            <v-text-field v-model="players[3]"></v-text-field>
           </v-card-text>
 
           <v-divider></v-divider>
@@ -122,26 +75,14 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator';
-
-class Record {
-  valid: string
-  player0: number
-  player1: number
-  player2: number
-  player3: number
-
-  constructor() {
-    this.valid = 'new'
-    this.player0 = 0
-    this.player1 = 0
-    this.player2 = 0
-    this.player3 = 0
-  }
-}
+import {Component, Vue, Watch} from 'vue-property-decorator';
+import Entry from '@/components/Entry.vue';
+import {Record} from '@/record'
 
 @Component({
-  components: {}
+  components: {
+    Entry
+  }
 })
 export default class Score extends Vue {
 
@@ -184,6 +125,38 @@ export default class Score extends Vue {
     {valid: 'new', player0: 0, player1: 0, player2: 0, player3: 0}
   ];
 
+  @Watch('players')
+  setPlayers() {
+    console.log('saving players')
+    this.headers[1].text = this.players[0]
+    this.headers[2].text = this.players[1]
+    this.headers[3].text = this.players[2]
+    this.headers[4].text = this.players[3]
+    this.$store.dispatch('save', {scores: this.scores, players: this.players})
+  }
+
+  @Watch('scores')
+  setScore() {
+    console.log('saving score')
+    this.$store.dispatch('save', {scores: this.scores, players: this.players})
+  }
+
+  mounted() {
+    this.$store.dispatch('getState').then( (data: any) => {
+      console.log('retrieved data')
+      console.dir(data)
+      this.scores = data.scores
+      this.players = data.players
+
+      if(this.scores?.length==0) {
+        this.scores = [
+          {valid: 'total', player0: 0, player1: 0, player2: 0, player3: 0},
+          {valid: 'new', player0: 0, player1: 0, player2: 0, player3: 0}
+        ];
+      }
+    })
+  }
+
   validate(item: Record): { color: string; icon: string } {
     const sum = (+item.player0) + (+item.player1) + (+item.player2) + (+item.player3);
     if(sum === 36 ) {
@@ -191,6 +164,13 @@ export default class Score extends Vue {
     } else {
       return {color: 'red', icon:'mdi-contrast-circle'}
     }
+  }
+
+  reset() {
+    this.scores = [
+      {valid: 'total', player0: 0, player1: 0, player2: 0, player3: 0},
+      {valid: 'new', player0: 0, player1: 0, player2: 0, player3: 0}
+    ];
   }
 
   sum(item: Record): number {
@@ -227,5 +207,7 @@ export default class Score extends Vue {
 </script>
 
 <style scoped>
-
+table.v-datatable thead th {
+  font-size: 20px !important;
+}
 </style>

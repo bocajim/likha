@@ -7,6 +7,13 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectId" id="1hrsJYDX6cM7JDegOFgWi5MhxpB" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -16,7 +23,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/store" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="ts.external.directory.path" value="C:\source\likha\node_modules\typescript\lib" />
@@ -27,6 +34,7 @@
       <recent name="C:\source\likha" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\source\likha\src\store" />
       <recent name="C:\source\likha" />
     </key>
   </component>
@@ -39,7 +47,7 @@
       <option name="presentableId" value="Default" />
       <updated>1600780473682</updated>
       <workItem from="1600780474788" duration="6773000" />
-      <workItem from="1600909269651" duration="5870000" />
+      <workItem from="1600909269651" duration="11833000" />
     </task>
     <servers />
   </component>
