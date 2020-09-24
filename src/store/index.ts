@@ -23,20 +23,20 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        save({commit}, state: { scores: any, players: any}) {
-            return new Promise((resolve, reject) => {
+        save({commit}, state: { scores: any; players: any}) {
+            return new Promise((resolve) => {
                 commit('saveState',{scores: state.scores, players: state.players})
                 resolve();
             })
         },
-        reset({commit}, state: { scores: any, players: any}) {
-            return new Promise((resolve, reject) => {
+        reset({commit}) {
+            return new Promise((resolve) => {
                 commit('resetState')
                 resolve();
             })
         },
-        getState({commit, state}) {
-            return new Promise((resolve, reject) => {
+        getState({state}) {
+            return new Promise((resolve) => {
                 resolve({scores: state.scores, players: state.players});
             })
         }
